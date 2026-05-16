@@ -71,6 +71,54 @@ function AnimatedCounter({ target, duration = 1500 }) {
   return <span ref={ref}>{count}</span>;
 }
 
+
+// Typing animation component
+const TYPING_PHRASES = [
+  "< AI / ML Engineer />",
+  "< Building LLM Applications />",
+  "< Generative AI Developer />",
+  "< Deep Learning Engineer />",
+  "< RAG & Chatbot Builder />",
+];
+
+function TypingAnimation() {
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [displayed, setDisplayed] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (isPaused) {
+      const t = setTimeout(() => { setIsPaused(false); setIsDeleting(true); }, 1800);
+      return () => clearTimeout(t);
+    }
+    const current = TYPING_PHRASES[phraseIdx];
+    if (!isDeleting) {
+      if (displayed.length < current.length) {
+        const t = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), 55);
+        return () => clearTimeout(t);
+      } else {
+        setIsPaused(true);
+      }
+    } else {
+      if (displayed.length > 0) {
+        const t = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 30);
+        return () => clearTimeout(t);
+      } else {
+        setIsDeleting(false);
+        setPhraseIdx((i) => (i + 1) % TYPING_PHRASES.length);
+      }
+    }
+  }, [displayed, isDeleting, isPaused, phraseIdx]);
+
+  return (
+    <div style={{ fontSize: "clamp(13px,1.8vw,19px)", fontWeight: 600, color: "#7c3aed", margin: "16px 0 20px", fontFamily: "'Space Mono',monospace", animation: "slide-in 0.7s ease-out 0.2s both", minHeight: "1.6em", display: "flex", alignItems: "center", justifyContent: "center", gap: 2 }}>
+      <span>{displayed}</span>
+      <span style={{ display: "inline-block", width: 2, height: "1.1em", background: "#7c3aed", marginLeft: 3, animation: "blink 0.8s step-start infinite", verticalAlign: "middle" }} />
+    </div>
+  );
+}
+
 function BrainIcon({ size = 40 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -107,6 +155,7 @@ const stats = [
   { label: "Technologies", value: 40, suffix: "+", icon: "🛠️", color: "#10b981" },
   { label: "AI/ML Projects", value: 12, suffix: "+", icon: "🤖", color: "#f59e0b" },
 ];
+
 
 export default function Portfolio() {
   const [activeNav, setActiveNav] = useState("About");
@@ -155,6 +204,7 @@ export default function Portfolio() {
         @keyframes pulse-glow { 0%,100%{box-shadow:0 0 20px #00d4ff33;} 50%{box-shadow:0 0 40px #00d4ff66,0 0 80px #00d4ff22;} }
         @keyframes gradient-shift { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
         @keyframes slide-in { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
         @keyframes brain-pulse { 0%,100%{filter:drop-shadow(0 0 6px #00d4ff66);} 50%{filter:drop-shadow(0 0 18px #7c3aedaa);} }
         @keyframes spin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
         @keyframes shimmer { 0%{left:-100%;} 100%{left:200%;} }
@@ -197,33 +247,33 @@ export default function Portfolio() {
         <div style={{ maxWidth: 820, width: "100%", textAlign: "center", margin: "0 auto" }}>
 
           {/* Brain badge */}
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#00d4ff08", border: "1px solid #00d4ff22", borderRadius: 100, padding: "8px 18px 8px 10px", marginBottom: 28, animation: "slide-in 0.6s ease-out" }}>
-            <div style={{ animation: "brain-pulse 3s ease-in-out infinite" }}><BrainIcon size={32} /></div>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#00d4ff08", border: "1px solid #00d4ff22", borderRadius: 100, padding: "8px 18px 8px 10px", marginBottom: 24, animation: "slide-in 0.65s ease-out" }}>
+            <div style={{ animation: "brain-pulse 3s ease-in-out infinite" }}><BrainIcon size={28} /></div>
             <span style={{ fontSize: 12, color: "#00d4ff", fontFamily: "'Space Mono',monospace", letterSpacing: 1 }}>AI / ML ENGINEER</span>
           </div>
 
           {/* Name */}
           <div style={{ animation: "slide-in 0.7s ease-out 0.1s both" }}>
             <p style={{ fontSize: "clamp(16px,2vw,22px)", color: "#94a3b8", fontWeight: 500, marginBottom: 2 }}>Hi, I'm</p>
-            <h1 style={{ fontSize: "clamp(52px,9vw,96px)", fontWeight: 900, lineHeight: 1.0 }}>
+            <h1 style={{ fontSize: "clamp(48px,8vw,88px)", fontWeight: 900, lineHeight: 1.05 }}>
               <span style={{ background: "linear-gradient(135deg,#00d4ff 0%,#7c3aed 50%,#10b981 100%)", backgroundSize: "200% 200%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "gradient-shift 4s ease infinite" }}>Ashish</span>
               <br /><span style={{ color: "#e2e8f0" }}>Jadhav</span>
             </h1>
           </div>
 
-          <div style={{ fontSize: "clamp(13px,1.8vw,19px)", fontWeight: 600, color: "#7c3aed", margin: "16px 0 20px", fontFamily: "'Space Mono',monospace", animation: "slide-in 0.7s ease-out 0.2s both" }}>{"< Building Intelligent AI Systems />"}</div>
+          <TypingAnimation />
 
-          <p style={{ fontSize: "clamp(14px,1.4vw,16px)", color: "#94a3b8", lineHeight: 1.85, maxWidth: 580, animation: "slide-in 0.7s ease-out 0.3s both" }}>
+          <p style={{ fontSize: "clamp(14px,1.4vw,16px)", color: "#94a3b8", lineHeight: 1.85, maxWidth: 580, margin: "0 auto 0", animation: "slide-in 0.7s ease-out 0.3s both" }}>
             Passionate about crafting end-to-end ML pipelines, Generative AI applications, and intelligent automation. Currently building at <strong style={{ color: "#00d4ff" }}>SDK Infotech Pvt. Ltd.</strong> with 2+ years of hands-on experience.
           </p>
 
-          {/* Buttons */}
-          <div style={{ display: "flex", gap: 12, marginTop: 34, flexWrap: "wrap", justifyContent: "center", animation: "slide-in 0.7s ease-out 0.4s both" }}>
-            <a href="https://drive.google.com/file/d/1kkDtOaEo-05Ei0JcI4GX7QHAm0_Xu_dP/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="hero-resume-btn" style={{ background: "linear-gradient(135deg,#00d4ff,#7c3aed)", border: "none", color: "#fff", padding: "13px 28px", borderRadius: 12, cursor: "pointer", fontSize: 14, fontWeight: 700, transition: "all 0.25s", fontFamily: "inherit", boxShadow: "0 0 28px #00d4ff22", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>
+          {/* Buttons — equal width, centered */}
+          <div style={{ display: "flex", gap: 14, marginTop: 34, justifyContent: "center", flexWrap: "wrap", animation: "slide-in 0.7s ease-out 0.4s both" }}>
+            <a href="https://drive.google.com/file/d/1kkDtOaEo-05Ei0JcI4GX7QHAm0_Xu_dP/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="hero-resume-btn" style={{ background: "linear-gradient(135deg,#00d4ff,#7c3aed)", border: "2px solid transparent", color: "#fff", padding: "13px 0", borderRadius: 12, cursor: "pointer", fontSize: 14, fontWeight: 700, transition: "all 0.25s", fontFamily: "inherit", boxShadow: "0 0 28px #00d4ff22", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, width: 200 }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Download Resume
             </a>
-            <button onClick={() => scrollToSection("Contact")} className="hero-contact-btn" style={{ background: "transparent", border: "1px solid #ffffff1a", color: "#e2e8f0", padding: "13px 28px", borderRadius: 12, cursor: "pointer", fontSize: 14, fontWeight: 600, transition: "all 0.25s", fontFamily: "inherit", display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <button onClick={() => scrollToSection("Contact")} className="hero-contact-btn" style={{ background: "transparent", border: "2px solid #ffffff22", color: "#e2e8f0", padding: "13px 0", borderRadius: 12, cursor: "pointer", fontSize: 14, fontWeight: 700, transition: "all 0.25s", fontFamily: "inherit", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, width: 200 }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/></svg>
               Contact Me
             </button>
@@ -357,7 +407,7 @@ export default function Portfolio() {
                     <div style={{ width: 54, height: 54, borderRadius: 14, background: "#f59e0b14", border: "1px solid #f59e0b28", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, flexShrink: 0 }}>🎓</div>
                     <div>
                       <h3 style={{ fontSize: 19, fontWeight: 800, color: "#e2e8f0", lineHeight: 1.3 }}>Bachelor of Computer Science</h3>
-                      <p style={{ color: "#f59e0b", fontWeight: 600, fontSize: 14, marginTop: 4 }}>Kaviyatri Bahinabai Chaudhari North Maharashtra University</p>
+                      <p style={{ color: "#f59e0b", fontWeight: 600, fontSize: 14, marginTop: 4 }}>Kavayitri Bahinabai Chaudhari North Maharashtra University</p>
                       <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 10, flexWrap: "wrap" }}>
                         <div style={{ background: "#f59e0b0e", border: "1px solid #f59e0b28", borderRadius: 8, padding: "4px 12px", fontSize: 11, fontFamily: "'Space Mono',monospace", color: "#f59e0b" }}>2021 — 2024</div>
                       </div>
@@ -382,10 +432,10 @@ export default function Portfolio() {
 
       {/* ── CONTACT ── */}
       <section id="contact" style={{ padding: "80px clamp(20px,8vw,120px) 100px", position: "relative", zIndex: 1 }}>
-        <div style={{ marginBottom: 48 }}>
+        <div style={{ marginBottom: 48, textAlign: "center" }}>
           <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 12, color: "#00d4ff", letterSpacing: 3, marginBottom: 10 }}>// 05. GET IN TOUCH</div>
           <h2 style={{ fontSize: "clamp(30px,5vw,50px)", fontWeight: 800 }}>Let's <span style={{ color: "#7c3aed" }}>Connect</span></h2>
-          <p style={{ color: "#4b6080", marginTop: 12, fontSize: 15, maxWidth: 480, lineHeight: 1.75 }}>Open to exciting AI/ML roles, freelance projects, and collaborations. Let's build something intelligent together.</p>
+          <p style={{ color: "#4b6080", marginTop: 12, fontSize: 15, maxWidth: 480, lineHeight: 1.75, textAlign: "center", margin: "12px auto 0" }}>Open to exciting AI/ML roles, freelance projects, and collaborations. Let's build something intelligent together.</p>
         </div>
 
         <div style={{ maxWidth: 1000 }}>
@@ -394,7 +444,6 @@ export default function Portfolio() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(220px,1fr))", gap: 14, marginBottom: 28 }}>
             {[
               { icon: "✉️", label: "Email", value: "jadhavash1406@gmail.com", href: "mailto:jadhavash1406@gmail.com", color: "#00d4ff" },
-              { icon: "📱", label: "Phone", value: "+91 8309486593", href: "tel:+918309486593", color: "#10b981" },
               { icon: "💼", label: "LinkedIn", value: "ashish-jadhav-ds", href: "https://www.linkedin.com/in/ashish-jadhav-ds", color: "#0ea5e9" },
               { icon: "🐙", label: "GitHub", value: "ashishjadhav-001", href: "https://github.com/ashishjadhav-001", color: "#a78bfa" },
             ].map(c => (
