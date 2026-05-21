@@ -1,4 +1,10 @@
 import { useState, useEffect, useRef } from "react";
+import emailjs from "@emailjs/browser";
+
+// ── EmailJS config — replace with your actual values from emailjs.com ──
+const EJ_SERVICE_ID  = "service_9u21ryq";
+const EJ_TEMPLATE_ID = "template_1uqqxjk";
+const EJ_PUBLIC_KEY  = "IpO475RHjsL4eOQEI";
 
 const skills = {
   "Programming & Backend": { icon: "⚙️", color: "#00d4ff", items: ["Python", "OOP", "Data Structures", "Algorithms", "FastAPI", "REST APIs"] },
@@ -131,7 +137,24 @@ export default function Portfolio() {
   const handleSend = () => {
     if (!formData.name || !formData.email || !formData.message) return;
     setFormStatus("sending");
-    setTimeout(() => { setFormStatus("sent"); setFormData({ name: "", email: "", message: "" }); }, 1200);
+    emailjs.send(
+      EJ_SERVICE_ID,
+      EJ_TEMPLATE_ID,
+      {
+        from_name:  formData.name,
+        from_email: formData.email,
+        message:    formData.message,
+        to_email:   "jadhavash1406@gmail.com",
+      },
+      EJ_PUBLIC_KEY
+    )
+    .then(() => {
+      setFormStatus("sent");
+      setFormData({ name: "", email: "", message: "" });
+    })
+    .catch(() => {
+      setFormStatus("error");
+    });
   };
 
   const particles = Array.from({ length: 12 }, (_, i) => ({
@@ -511,6 +534,8 @@ export default function Portfolio() {
 
             {formStatus==="sent" ? (
               <div style={{ background:"#10b98112", border:"1px solid #10b98130", borderRadius:10, padding:"14px", color:"#10b981", fontSize:14, fontWeight:600, textAlign:"center" }}>✅ Message sent! I'll get back to you soon.</div>
+            ) : formStatus==="error" ? (
+              <div style={{ background:"#ef444412", border:"1px solid #ef444430", borderRadius:10, padding:"14px", color:"#ef4444", fontSize:14, fontWeight:600, textAlign:"center" }}>❌ Something went wrong. Please email me directly at jadhavash1406@gmail.com</div>
             ) : (
               <button className="send-btn" onClick={handleSend} disabled={formStatus==="sending"} style={{ background:"linear-gradient(135deg,#00d4ff,#7c3aed)", border:"none", color:"#fff", padding:"14px 32px", borderRadius:11, cursor:"pointer", fontSize:14, fontWeight:700, fontFamily:"inherit", transition:"all 0.25s", display:"inline-flex", alignItems:"center", gap:8 }}>
                 {formStatus==="sending"
