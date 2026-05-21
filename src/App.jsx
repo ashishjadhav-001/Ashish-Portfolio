@@ -314,7 +314,7 @@ export default function Portfolio() {
 
           {/* Buttons */}
           <div className="hero-btns" style={{ display:"flex", gap:12, marginTop:28, justifyContent:"center", flexWrap:"wrap", animation:"slide-in 0.7s ease-out 0.4s both" }}>
-            <a href="https://drive.google.com/file/d/1kkDtOaEo-05Ei0JcI4GX7QHAm0_Xu_dP/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="hero-resume-btn" style={{ background:"linear-gradient(135deg,#00d4ff,#7c3aed)", border:"2px solid transparent", color:"#fff", padding:"13px 0", borderRadius:12, cursor:"pointer", fontSize:14, fontWeight:700, transition:"all 0.25s", fontFamily:"inherit", boxShadow:"0 0 24px #00d4ff1a", textDecoration:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", gap:8, width:200 }}>
+            <a href="https://drive.google.com/uc?export=download&id=1kkDtOaEo-05Ei0JcI4GX7QHAm0_Xu_dP" target="_blank" rel="noopener noreferrer" className="hero-resume-btn" style={{ background:"linear-gradient(135deg,#00d4ff,#7c3aed)", border:"2px solid transparent", color:"#fff", padding:"13px 0", borderRadius:12, cursor:"pointer", fontSize:14, fontWeight:700, transition:"all 0.25s", fontFamily:"inherit", boxShadow:"0 0 24px #00d4ff1a", textDecoration:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", gap:8, width:200 }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Download Resume
             </a>
